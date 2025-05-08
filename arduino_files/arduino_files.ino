@@ -7,7 +7,8 @@
 
 #define OLED_RESET     -1 // Reset pin # (or -1 if sharing Arduino reset pin)
 #define SCREEN_ADDRESS 0x3C ///< See datasheet for Address; 0x3D for 128x64, 0x3C for 128x32
-#define UPDATE_INTERVAL_MS 1000;
+#define UPDATE_INTERVAL_MS 1000
+#define SECONDS_IN_A_DAY 86400
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 long current_seconds = -1;
 int16_t degrees = 248;
@@ -53,6 +54,9 @@ void loop() {
   if (current_seconds != -1 && next_date_update <= now) {
     next_date_update = now + UPDATE_INTERVAL_MS;
     current_seconds++;
+    if (current_seconds >= SECONDS_IN_A_DAY) {
+      current_seconds -= SECONDS_IN_A_DAY;
+    }
   }
 
   int val = analogRead(A0);
