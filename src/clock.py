@@ -4,7 +4,7 @@ import schedule
 import time
 import requests
 
-arduino = serial.Serial(port='COM4 ', baudrate=9600, timeout=.1)
+arduino = serial.Serial(port='COM4', baudrate=9600, timeout=.1)
 base_url = 'https://api.open-meteo.com/v1/forecast?'
 
 params = {
@@ -39,13 +39,14 @@ def send_weather_to_arduino():
     arduino.flush()
 
 
-schedule.every().hour.at(":00").do(send_weather_to_arduino)
-while True:
-    if arduino.readline().strip() == b"ready":
-        send_weather_to_arduino()
-        while True:
-            schedule.run_pending()
-            time.sleep(1)
+if __name__ == '__main__':
+    schedule.every().hour.at(":00").do(send_weather_to_arduino)
+    while True:
+        if arduino.readline().strip() == b"ready":
+            send_weather_to_arduino()
+            while True:
+                schedule.run_pending()
+                time.sleep(1)
 
 
 # a = {
